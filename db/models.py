@@ -1,9 +1,8 @@
+from datetime import date, datetime
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, String, Integer, Float, Date, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base, DeclarativeBase, relationship
-from datetime import date, datetime
-
-from variables import product_types
+from variables import PRODUCT_TYPES
 
 
 BaseModel: DeclarativeBase = declarative_base()
@@ -19,17 +18,19 @@ class Product(BaseModel):
     price = Column("price", Float)
     min_unit = Column("min_unit", Integer)
     best_before = Column("best_before", Integer)
+    shelf = Column("shelf", String(16), index=True)
 
-    def __init__(self, name: str, type: str, code: str, price: float, min_unit: int, best_before: int):
+    def __init__(self, name: str, type: str, code: str, price: float, min_unit: int, best_before: int, shelf: str):
         self.name = name
         self.type = type
         self.code = code
         self.price = price
         self.min_unit = min_unit
         self.best_before = best_before
+        self.shelf = shelf
 
     def __repr__(self):
-        return f"{product_types.get(self.type.lower(), "oth").capitalize()}. {self.name}"
+        return f"{PRODUCT_TYPES.get(self.type.lower(), "oth").capitalize()}. {self.name}"
 
 
 class Batch(BaseModel):

@@ -1,8 +1,7 @@
+from datetime import date
 from db.models import session
 from db.models import Product, Batch
-from variables import row_count
-
-from datetime import date
+from variables import ROW_COUNT
 
 
 def get(code: str, batch_no: str) -> Batch | None:
@@ -25,7 +24,7 @@ def get_paginated(page: int, code: str | None = None) -> tuple[list[Batch], int]
     batches = batches.order_by(Batch.exp_date)
 
     count: int = batches.count()
-    paginated_batches: list[Batch] = batches.slice((page-1) * row_count, page * row_count)
+    paginated_batches: list[Batch] = batches.slice((page-1) * ROW_COUNT, page * ROW_COUNT)
     return paginated_batches, count
 
 

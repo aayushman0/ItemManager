@@ -1,8 +1,7 @@
+from datetime import date
 from sqlalchemy import func
 from db.models import session
 from db.models import Batch, ProductBill
-
-from datetime import date
 
 
 def get_by_date(date: date) -> list[ProductBill]:

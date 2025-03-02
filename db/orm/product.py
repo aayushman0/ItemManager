@@ -1,8 +1,7 @@
+import re
 from db.models import session
 from db.models import Product
-from variables import row_count, product_types
-
-import re
+from variables import ROW_COUNT, PRODUCT_TYPES
 
 
 class ProductAlreadyExists(Exception):
@@ -19,10 +18,16 @@ def get_by_code(code: str) -> Product | None:
     return product
 
 
-def get_paginated(page: int) -> tuple[list[Product], int]:
-    products: list[Product] = session.query(Product)
+def get_paginated(page: int, name: str, type: str, shelf: str) -> tuple[list[Product], int]:
+    products = session.query(Product)
+    if name:
+        products = products.filter(Product.name.icontains(name))
+    if type != "All":
+        products = products.filter(Product.type == type)
+    if shelf:
+        products = products.filter(Product.shelf.contains(shelf))
     count: int = products.count()
-    paginated_products: list[Product] = products.slice((page - 1) * row_count, page * row_count)
+    paginated_products: list[Product] = products.slice((page - 1) * ROW_COUNT, page * ROW_COUNT)
     return paginated_products, count
 
 
@@ -31,13 +36,13 @@ def get_filtered(code: str) -> list[Product]:
     return products
 
 
-def create(name: str, type: str, price: float, min_unit: int, best_before: int) -> Product | ProductAlreadyExists:
-    code: str = f"{product_types.get(type.lower(), 'oth')}{re.sub('[^A-Za-z0-9]+', '', name).lower()}"
+def create(name: str, type: str, price: float, min_unit: int, best_before: int, shelf: str) -> Product | ProductAlreadyExists:
+    code: str = f"{PRODUCT_TYPES.get(type.lower(), 'oth')}{re.sub('[^A-Za-z0-9]+', '', name).lower()}"
 
     product: Product | None = session.query(Product).filter(Product.code == code).scalar()
     if product:
-        return ProductAlreadyExists
-    product = Product(name, type, code, price, min_unit, best_before)
+        raise ProductAlreadyExists
+    product = Product(name, type, code, price, min_unit, best_before, shelf)
     session.add(product)
     session.commit()
 
@@ -51,7 +56,7 @@ def edit(code: str, name: str, type: str, price: float, min_unit: int, best_befo
 
     product.name = name
     product.type = type
-    product.code = f"{product_types.get(type.lower(), 'oth')}{re.sub('[^A-Za-z0-9]+', '', name).lower()}"
+    product.code = f"{PRODUCT_TYPES.get(type.lower(), 'oth')}{re.sub('[^A-Za-z0-9]+', '', name).lower()}"
     product.price = price
     product.min_unit = min_unit
     product.best_before = best_before
