@@ -4,6 +4,7 @@ from datetime import date, datetime
 import re
 from db.orm import product, batch
 from GUI import classes
+from variables import PRODUCT_TYPES
 
 
 class Frame(classes.Frame):
@@ -28,7 +29,7 @@ class Frame(classes.Frame):
         self.distributor = tk.StringVar()
 
     def main(self) -> None:
-        self.first_entry = self.string_entry(self, "Name: ", self.i, 0, self.product_name)
+        self.first_entry = self.choice_entry(self, "Name: ", self.i, 0, self.product_name, [], False)
         self.string_entry(self, "Batch No.: ", self.i, 0, self.batch_no)
         self.float_entry(self, "Price: ", self.i, 0, self.price)
         self.min_unit_entry = self.int_entry(self, "Min Unit: ", self.i, 0, self.min_unit)
@@ -45,6 +46,12 @@ class Frame(classes.Frame):
 
     def events(self) -> None:
         self.tab_sequencing()
+        self.product_name.trace_add("write", self.get_filtered_names)
+        self.first_entry.bind("<<ComboboxSelected>>", self.select_name)
+        self.first_entry.bind("<Return>", self.select_name)
+        self.first_entry.bind("<Tab>", self.select_name)
+        self.mfg_month.trace_add("write", self.update_date)
+        self.mfg_year.trace_add("write", self.update_date)
 
     def add_batch(self) -> None:
         product_name = self.product_name.get()
@@ -75,7 +82,37 @@ class Frame(classes.Frame):
             return None
         self.refresh()
 
+    def get_filtered_names(self, *args) -> None:
+        name = re.sub('[^A-Za-z0-9]+', '', self.product_name.get()).lower()
+        if len(name) < 3:
+            return None
+        products = product.get_filtered(name)
+        names = [f"{PRODUCT_TYPES.get(p.type.lower(), 'oth').capitalize()}. {p.name}" for p in products]
+        self.first_entry["values"] = names
+        self.first_entry
+
+    def select_name(self, *args) -> None:
+        if not self.first_entry["values"]:
+            self.first_entry.delete(0, tk.END)
+            return None
+        self.first_entry.current(0)
+        name = re.sub('[^A-Za-z0-9]+', '', self.product_name.get()).lower()
+        p = product.get_by_code(name)
+        self.price.set(p.price)
+        self.min_unit.set(p.min_unit)
+        self.best_before = p.best_before
+        self.update_date()
+
+    def update_date(self, *args) -> None:
+        mfg_month = self.mfg_month.get()
+        mfg_year = self.mfg_year.get()
+        if not (mfg_month and mfg_year):
+            return None
+        self.exp_month.set(((mfg_month + self.best_before) % 12) or 12)
+        self.exp_year.set(mfg_year + (mfg_month + self.best_before - 1) // 12)
+
     def refresh(self) -> None:
+        self.first_entry["values"] = []
         self.product_name.set("")
         self.batch_no.set("")
         self.price.set("")

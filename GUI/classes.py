@@ -18,8 +18,6 @@ class Frame(ttk.Frame):
         self.table_columns_align = list()
         self.page_no = 1
         self.total_pages = 1
-        self.first_entry: tk.Widget
-        self.last_entry: tk.Widget
 
     # ------------------------------------------------ Getter and Setter ------------------------------------------------ #
     @property
@@ -50,7 +48,7 @@ class Frame(ttk.Frame):
         )
         return entry
 
-    def choice_entry(self, cls: ttk.Frame, text: str, row: int, column: int, textvariable: tk.StringVar, choices: list[str]) -> ttk.Combobox:
+    def choice_entry(self, cls: ttk.Frame, text: str, row: int, column: int, textvariable: tk.StringVar, choices: list[str], readonly: bool = True) -> ttk.Combobox:
         tk.Label(
                 cls, text=text, font=LABEL_FONT
             ).grid(
@@ -59,7 +57,7 @@ class Frame(ttk.Frame):
                 sticky="e"
         )
         choice_box = ttk.Combobox(
-            cls, state="readonly", values=choices, textvariable=textvariable, font=ENTRY_FONT
+            cls, state="readonly" if readonly else "normal", values=choices, textvariable=textvariable, font=ENTRY_FONT
         )
         choice_box.grid(
                 row=row, column=column+1,
