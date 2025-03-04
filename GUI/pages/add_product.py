@@ -4,6 +4,7 @@ from db.orm import product
 from GUI import classes
 from variables import PRODUCT_TYPES_LIST
 
+
 class Frame(classes.Frame):
     def __init__(self, master) -> None:
         super().__init__(master)

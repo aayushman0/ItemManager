@@ -106,6 +106,31 @@ class Frame(ttk.Frame):
         )
         return entry
 
+    def date_entry(self, cls: ttk.Frame, text: str, row: int, column: int, monthvar: tk.IntVar, yearvar: tk.IntVar) -> None:
+        tk.Label(
+                cls, text=text, font=LABEL_FONT
+            ).grid(
+                row=row, column=column,
+                padx=self.PADX, pady=self.PADY,
+                sticky="e"
+        )
+        tk.Spinbox(
+                cls, from_=1, to=12, textvariable=monthvar, font=ENTRY_FONT,
+                validate="key", validatecommand=self.int_vcmd
+            ).grid(
+                row=row, column=column+1,
+                padx=self.PADX, pady=self.PADY,
+                sticky="ew"
+        )
+        tk.Spinbox(
+                cls, from_=2000, to=2999, textvariable=yearvar, font=ENTRY_FONT,
+                validate="key", validatecommand=self.int_vcmd
+            ).grid(
+                row=row, column=column+2,
+                padx=self.PADX, pady=self.PADY,
+                sticky="ew"
+        )
+
     def create_button(self, cls: ttk.Frame, text: str, row: int, column: int, width: int, bg: str, func: Callable) -> tk.Button:
         btn = tk.Button(
                 cls, text=text, width=width, command=func,
@@ -155,9 +180,12 @@ class Frame(ttk.Frame):
 
     def tab_sequencing(self):
         self.first_entry.bind("<Shift-Tab>", lambda x: self.last_entry.focus_set() or "break")
-        self.last_entry.bind("<Tab>", lambda x: self.first_entry.focus_set() or "break")
+        self.last_entry.bind("<Tab>", lambda x: (self.first_entry.focus_set() or "break") if x.state!=9 else None)
 
     def refresh(self) -> None:
+        pass
+
+    def events(self) -> None:
         pass
 
     def set_active(self) -> None:

@@ -17,12 +17,15 @@ def get_from_product(product_id: int) -> list[Batch]:
     return batches
 
 
-def get_paginated(page: int, code: str | None = None) -> tuple[list[Batch], int]:
-    batches: list[Batch] = session.query(Batch)
-    if code:
-        batches = batches.join(Product).filter(Product.code.icontains(code))
+def get_paginated(page: int, name: str, shelf: str, distributor: str) -> tuple[list[Batch], int]:
+    batches = session.query(Batch).join(Product)
+    if name:
+        batches = batches.filter(Product.code.icontains(name))
+    if shelf:
+        batches = batches.filter(Product.shelf.icontains(shelf))
+    if distributor:
+        batches = batches.filter(Batch.distributor.icontains(distributor))
     batches = batches.order_by(Batch.exp_date)
-
     count: int = batches.count()
     paginated_batches: list[Batch] = batches.slice((page-1) * ROW_COUNT, page * ROW_COUNT)
     return paginated_batches, count
@@ -35,7 +38,7 @@ def create(product_id: str, batch_no: str, price: float, quantity: int, mfg_date
     product.price = price
 
     batch: Batch | None = session.query(Batch).filter(Batch.product_id == product_id, Batch.batch_no == batch_no).scalar()
-    if not Batch:
+    if not batch:
         batch = Batch(product_id, batch_no, quantity, price, mfg_date, exp_date, distributor)
     else:
         batch.quantity += quantity
