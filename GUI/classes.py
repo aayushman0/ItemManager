@@ -3,6 +3,7 @@ from tkinter import ttk
 from typing import Callable
 from variables import LABEL_FONT, ENTRY_FONT, ROW_COUNT
 
+
 class Frame(ttk.Frame):
     def __init__(self, master: tk.Tk | ttk.Frame) -> None:
         super().__init__(master)
@@ -30,7 +31,7 @@ class Frame(ttk.Frame):
         self._i = x
     # ------------------------------------------------------------------------------------------------------------------- #
 
-    def string_entry(self, cls: ttk.Frame, text: str, row: int, column: int, textvariable: tk.StringVar) -> tk.Entry:
+    def string_entry(self, cls: ttk.Frame, text: str, row: int, column: int, textvariable: tk.StringVar, columnspan: int = 1) -> tk.Entry:
         tk.Label(
                 cls, text=text, font=LABEL_FONT
             ).grid(
@@ -42,7 +43,7 @@ class Frame(ttk.Frame):
                 cls, textvariable=textvariable, font=ENTRY_FONT
             )
         entry.grid(
-                row=row, column=column+1,
+                row=row, column=column+1, columnspan=columnspan,
                 padx=self.PADX, pady=self.PADY,
                 sticky="ew"
         )
@@ -178,7 +179,7 @@ class Frame(ttk.Frame):
 
     def tab_sequencing(self):
         self.first_entry.bind("<Shift-Tab>", lambda x: self.last_entry.focus_set() or "break")
-        self.last_entry.bind("<Tab>", lambda x: (self.first_entry.focus_set() or "break") if x.state!=9 else None)
+        self.last_entry.bind("<Tab>", lambda x: (self.first_entry.focus_set() or "break") if x.state != 9 else None)
 
     def refresh(self) -> None:
         pass

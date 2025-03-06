@@ -1,7 +1,7 @@
 import tkinter as tk
-from tkinter import ttk, font
+from tkinter import ttk
 from GUI.pages import add_product, list_product, add_batch, list_batch, add_bill, list_bill
-from variables import COMPANY_NAME, COMPANY_ADDRESS, PAN_NO, DDA_NO, ENTRY_FONT, TABLE_HEADER_FONT, TABLE_DATA_FONT
+from variables import ENTRY_FONT, TABLE_HEADER_FONT, TABLE_DATA_FONT
 
 
 # -------------------------------------- Main Window -------------------------------------- #

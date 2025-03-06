@@ -13,15 +13,15 @@ def get(id: int) -> tuple[ProductBill, list[tuple[Batch, int]]] | None:
     bill: ProductBill | None = session.query(ProductBill).filter(ProductBill.id == id).scalar()
     if not bill:
         return None
-    
+
     return bill, get_batch_list(bill.bill)
 
 
 def get_batch_list(bill_string: str) -> list[tuple[Batch, int]]:
-    batch_and_qty = [row.split(".") for row in bill_string.split(",")]
+    batch_qty_total = [row.split(":") for row in bill_string.split(",")]
     return [
-        (session.query(Batch).filter(Batch.id == batch_id).scalar(), qty)
-        for batch_id, qty in batch_and_qty
+        (session.query(Batch).filter(Batch.id == batch_id).scalar(), int(qty or 0))
+        for batch_id, qty, _ in batch_qty_total
     ]
 
 

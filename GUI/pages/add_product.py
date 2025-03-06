@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from db.orm import product
 from GUI import classes
 from variables import PRODUCT_TYPES_LIST
@@ -44,7 +43,7 @@ class Frame(classes.Frame):
             print("Value missing!!!")
             return None
         try:
-            p = product.create(
+            _ = product.create(
                 name=name,
                 type=type,
                 price=float(price),

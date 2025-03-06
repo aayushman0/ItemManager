@@ -32,8 +32,7 @@ class Frame(classes.Frame):
         self.first_entry = self.choice_entry(self, "Name: ", self.i, 0, self.product_name, [], False)
         self.string_entry(self, "Batch No.: ", self.i, 0, self.batch_no)
         self.float_entry(self, "Price: ", self.i, 0, self.price)
-        self.min_unit_entry = self.int_entry(self, "Min Unit: ", self.i, 0, self.min_unit)
-        self.min_unit_entry.config(state="disabled")
+        self.int_entry(self, "Min Unit: ", self.i, 0, self.min_unit).config(state="disabled")
         self.int_entry(self, "Quantity: ", self.i, 0, self.quantity)
 
         date_frame = ttk.Frame(self)
@@ -89,7 +88,6 @@ class Frame(classes.Frame):
         products = product.get_filtered(name)
         names = [f"{PRODUCT_TYPES.get(p.type.lower(), 'oth').capitalize()}. {p.name}" for p in products]
         self.first_entry["values"] = names
-        self.first_entry
 
     def select_name(self, *args) -> None:
         if not self.first_entry["values"]:

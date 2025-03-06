@@ -12,8 +12,8 @@ def get(code: str, batch_no: str) -> Batch | None:
     return batch
 
 
-def get_from_product(product_id: int) -> list[Batch]:
-    batches: list[Batch] = session.query(Batch).filter(Batch.product_id == product_id).all()
+def get_from_product(code: int) -> list[Batch]:
+    batches: list[Batch] = session.query(Batch).join(Product).filter(Product.code == code, Batch.quantity > 0).order_by(Batch.exp_date).all()
     return batches
 
 
