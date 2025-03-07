@@ -4,7 +4,7 @@ import re
 from db.models import Batch
 from db.orm import product, batch, product_bill
 from GUI import classes
-from variables import ENTRY_FONT, PRODUCT_TYPES
+from variables import ENTRY_FONT, PRODUCT_TYPES, BILL_ROW_COUNT
 
 
 class Frame(classes.Frame):
@@ -52,13 +52,16 @@ class Frame(classes.Frame):
         table_frame.columnconfigure(0, weight=1)
         table_frame.grid(row=1, sticky="ew")
         self.create_table(table_frame, 0, 0)
+        self.table.config(height=BILL_ROW_COUNT)
 
         bottom_frame = ttk.Frame(self)
+        bottom_frame.columnconfigure(4, weight=1)
         bottom_frame.grid(row=2, sticky="ew")
         self.float_entry(bottom_frame, "Sum Total: ", 0, 0, self.sum_total).config(state="disabled")
         self.float_entry(bottom_frame, "Discount: ", 0, 2, self.discount)
         self.float_entry(bottom_frame, "Net Total: ", 1, 0, self.net_total).config(state="disabled")
-        self.last_entry = self.create_button(bottom_frame, "Save Bill", 1, 5, 30, "#d0ffd0", self.add_bill)
+        self.last_entry = self.create_button(bottom_frame, "Save Bill", 0, 4, 30, "#d0ffd0", self.add_bill)
+        self.last_entry.grid_configure(rowspan=2)
 
     def events(self) -> None:
         self.tab_sequencing()

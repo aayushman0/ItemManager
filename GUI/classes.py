@@ -137,7 +137,7 @@ class Frame(ttk.Frame):
             )
         btn.grid(
                 row=row, column=column,
-                padx=self.PADX*2, pady=self.PADY*2,
+                padx=self.PADX, pady=self.PADY,
                 ipadx=10, ipady=10,
                 sticky="e"
         )

@@ -1,7 +1,8 @@
 from dotenv import dotenv_values
 
 
-ROW_COUNT: int = 20
+ROW_COUNT: int = 25
+BILL_ROW_COUNT: int = 18
 PRODUCT_TYPES: dict[str, str] = {
     "tablet": "tab",
     "capsule": "cap",
