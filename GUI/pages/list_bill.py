@@ -3,13 +3,15 @@ from tkinter import ttk
 from datetime import date, timedelta
 from db.orm import product_bill
 from GUI import classes
+from GUI.pages import bill_detail
 from variables import ENTRY_FONT
 
 
 class Frame(classes.Frame):
-    def __init__(self, master) -> None:
+    def __init__(self, master, billDetail: bill_detail.Frame) -> None:
         super().__init__(master)
         self.columnconfigure(0, weight=1)
+        self.billDetail = billDetail
         self.table_columns = ["Bill No.", "Customer's Name", "Sum Total", "Discount", "Net Total", "Bill Date"]
         self.table_columns_width = [30, 400, 100, 100, 100, 70]
         self.table_columns_align = ["e", "w", "e", "e", "e", "e"]
@@ -78,11 +80,8 @@ class Frame(classes.Frame):
         if bill_id is None:
             print("Bill ID not found!!!")
             return None
-        bill = product_bill.get(bill_id)
-        if not bill:
-            print("Bill not found!!!")
-            return None
-        # Send bill to bill window
+        self.billDetail.bill_no.set(bill_id)
+        self.billDetail.set_active()
 
     def refresh(self) -> None:
         self.change_date(0)

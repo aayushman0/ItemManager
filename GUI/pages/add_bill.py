@@ -168,7 +168,6 @@ class Frame(classes.Frame):
         self.calculate_net_total()
 
     def refresh_entry(self) -> None:
-        self.customer_name.set("")
         self.product_entry["values"] = []
         self.product_name.set("")
         self.batch_no_entry["values"] = []
@@ -180,6 +179,7 @@ class Frame(classes.Frame):
         self.item_total.set("")
 
     def refresh(self) -> None:
+        self.customer_name.set("")
         self.refresh_entry()
         self.bill_list = []
         self.table.delete(*self.table.get_children())

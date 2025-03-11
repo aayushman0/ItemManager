@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy import Column, String, Integer, Float, Date, DateTime
+from sqlalchemy import Column, String, Integer, Float, Date, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base, DeclarativeBase, relationship
 from variables import PRODUCT_TYPES
 
@@ -72,6 +72,7 @@ class ProductBill(BaseModel):
     discount = Column("discount", Float)
     net_amount = Column("net_amount", Float)
     bill_date = Column("bill_date", DateTime, index=True)
+    is_enabled = Column("is_enabled", Boolean)
 
     def __init__(self, customer_name: str, bill: str, total_amount: float, discount: float, net_amount: float):
         self.customer_name = customer_name
@@ -80,6 +81,7 @@ class ProductBill(BaseModel):
         self.discount = discount
         self.net_amount = net_amount
         self.bill_date = datetime.now()
+        self.is_enabled = True
 
     def __repr__(self):
         return f"{self.id}. {self.customer_name}"
