@@ -49,8 +49,8 @@ def create(name: str, type: str, price: float, min_unit: int, best_before: int, 
     return product
 
 
-def edit(code: str, name: str, type: str, price: float, min_unit: int, best_before: int) -> Product | None:
-    product: Product | None = session.query(Product).filter(Product.code == code).scalar()
+def edit(id: str, name: str, type: str, price: float, min_unit: int, best_before: int, shelf: str) -> Product | None:
+    product: Product | None = session.query(Product).filter(Product.id == id).scalar()
     if not product:
         return None
 
@@ -60,6 +60,7 @@ def edit(code: str, name: str, type: str, price: float, min_unit: int, best_befo
     product.price = price
     product.min_unit = min_unit
     product.best_before = best_before
+    product.shelf = shelf
     session.commit()
 
     return product

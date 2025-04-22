@@ -2,13 +2,15 @@ import tkinter as tk
 from tkinter import ttk
 from db.orm import product
 from GUI import classes
+from GUI.pages import product_detail
 from variables import PRODUCT_TYPES_LIST, ROW_COUNT
 
 
 class Frame(classes.Frame):
-    def __init__(self, master) -> None:
+    def __init__(self, master, productDetail: product_detail.Frame) -> None:
         super().__init__(master)
         self.columnconfigure(0, weight=1)
+        self.productDetail = productDetail
         self.table_columns = ["ID", "Name", "Type", "Price/Unit", "Best Before", "Shelf"]
         self.table_columns_width = [30, 500, 150, 150, 100, 70]
         self.table_columns_align = ["e", "w", "e", "e", "e", "e"]
@@ -39,6 +41,7 @@ class Frame(classes.Frame):
         self.product_name.trace_add("write", self.filter_callback)
         self.product_type.trace_add("write", self.filter_callback)
         self.product_shelf_id.trace_add("write", self.filter_callback)
+        self.table.bind("<Double-Button-1>", self.select_product)
 
     def update_table(self) -> None:
         name = self.product_name.get()
@@ -68,6 +71,15 @@ class Frame(classes.Frame):
     def filter_callback(self, *args) -> None:
         self.page_no = 1
         self.update_table()
+
+    def select_product(self, *args) -> None:
+        selected_product = self.table.selection()
+        if not selected_product:
+            print("No Product Selected!!!")
+            return None
+        prod_id = self.table.item(selected_product[0]).get("values", [None])[0]
+        self.productDetail.product_id.set(prod_id)
+        self.productDetail.set_active()
 
     def refresh(self) -> None:
         self.product_name.set("")

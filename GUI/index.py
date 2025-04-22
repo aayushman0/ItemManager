@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from GUI.pages import add_product, list_product, add_batch, list_batch, batch_detail, add_bill, list_bill, bill_detail
+from GUI.pages import add_product, list_product, product_detail
+from GUI.pages import add_batch, list_batch, batch_detail
+from GUI.pages import add_bill, list_bill, bill_detail
 from variables import ENTRY_FONT, TABLE_HEADER_FONT, TABLE_DATA_FONT
 
 
@@ -24,7 +26,8 @@ style.configure("Treeview.Heading", font=TABLE_HEADER_FONT)
 
 # ----------------------------------------- Pages ----------------------------------------- #
 addProduct = add_product.Frame(frame)
-listProduct = list_product.Frame(frame)
+productDetail = product_detail.Frame(frame)
+listProduct = list_product.Frame(frame, productDetail)
 addBatch = add_batch.Frame(frame)
 batchDetail = batch_detail.Frame(frame)
 listBatch = list_batch.Frame(frame, batchDetail)
