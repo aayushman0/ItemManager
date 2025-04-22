@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter.messagebox import askyesno
 from db.orm import product_bill
 from GUI import classes
 from variables import BILL_ROW_COUNT
@@ -41,8 +42,26 @@ class Frame(classes.Frame):
         self.create_table(table_frame, 0, 0)
         self.table.config(height=BILL_ROW_COUNT)
 
+        edit_frame = ttk.Frame(self)
+        edit_frame.grid(row=2, sticky="e")
+        self.create_button(edit_frame, "Delete Bill", 0, 0, 30, "#ffd0d0", self.delete_bill)
+
     def events(self) -> None:
         pass
+
+    def delete_bill(self) -> None:
+        bill_no = self.bill_no.get()
+        if not bill_no:
+            return None
+        confirmation = askyesno(title="Delete Bill", message=f"Delete Bill no. {bill_no}?")
+        if not confirmation:
+            return None
+        b = product_bill.delete(bill_no)
+        if not b:
+            return None
+        if b.is_enabled:
+            print("Bill not deleted!!!")
+            return None
 
     def refresh(self) -> None:
         bill_no = self.bill_no.get()

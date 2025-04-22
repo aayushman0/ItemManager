@@ -36,3 +36,18 @@ def create(customer_name: str, bill_string: str, total_amount: float, discount: 
     session.commit()
 
     return bill
+
+
+def delete(bill_no: str) -> ProductBill | None:
+    bill: ProductBill | None = session.query(ProductBill).filter(ProductBill.id == bill_no).scalar()
+    if not bill:
+        return None
+
+    for batch, qty, _ in get_batch_list(bill.bill):
+        if not batch:
+            continue
+        batch.quantity += qty
+    bill.is_enabled = False
+    session.commit()
+
+    return bill
