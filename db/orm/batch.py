@@ -36,6 +36,12 @@ def get_paginated(page: int, name: str, shelf: str, distributor: str) -> tuple[l
     return paginated_batches, count
 
 
+def get_total_amount() -> float:
+    batches = session.query(Batch).filter(Batch.quantity > 0)
+    total = sum(batch.quantity * batch.price for batch in batches)
+    return total
+
+
 def create(product_id: str, batch_no: str, price: float, quantity: int, mfg_date: date, exp_date: date, distributor: str) -> Batch | None:
     product: Product | None = session.query(Product).filter(Product.id == product_id).scalar()
     if not product:

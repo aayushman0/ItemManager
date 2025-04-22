@@ -64,19 +64,21 @@ class Frame(classes.Frame):
             return None
 
     def refresh(self) -> None:
+        self.table.delete(*self.table.get_children())
         bill_no = self.bill_no.get()
-        if not bill_no:
-            return None
         bill, batches_and_qty = product_bill.get(bill_no)
         if not bill:
             print("Bill not found!!!")
+            self.bill_date.set("XXXX-XX-XX")
+            self.customer_name.set("")
+            self.discount.set("")
+            self.net_total.set("")
             return None
         self.bill_date.set(bill.bill_date)
         self.customer_name.set(bill.customer_name)
         self.sum_total.set(bill.total_amount)
         self.discount.set(bill.discount)
         self.net_total.set(bill.net_amount)
-        self.table.delete(*self.table.get_children())
         for b, qty, total in batches_and_qty:
             self.table.insert(
                 '', tk.END,

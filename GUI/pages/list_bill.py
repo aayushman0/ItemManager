@@ -43,6 +43,11 @@ class Frame(classes.Frame):
         table_frame.grid(row=1, sticky="ew")
         self.create_table(table_frame, 0, 0)
 
+        bottom_frame = ttk.Frame(self)
+        bottom_frame.grid(row=2, sticky="ew")
+        total_entry = self.string_entry(bottom_frame, "Current Day's Total: ", 0, 0, self.current_total)
+        total_entry.config(state="disabled")
+
     def events(self) -> None:
         self.tab_sequencing()
         self.table.bind("<Double-Button-1>", self.select_bill)

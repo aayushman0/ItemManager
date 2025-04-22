@@ -42,6 +42,8 @@ def delete(bill_no: str) -> ProductBill | None:
     bill: ProductBill | None = session.query(ProductBill).filter(ProductBill.id == bill_no).scalar()
     if not bill:
         return None
+    if not bill.is_enabled:
+        return None
 
     for batch, qty, _ in get_batch_list(bill.bill):
         if not batch:

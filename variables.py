@@ -17,6 +17,8 @@ PRODUCT_TYPES: dict[str, str] = {
 }
 PRODUCT_TYPES_LIST = [key.capitalize() for key in PRODUCT_TYPES.keys()]
 
+HEADER_FONT = ("Aerial", 30)
+SUBHEADER_FONT = ("Aerial", 10)
 LABEL_FONT = ("Aerial", 16)
 ENTRY_FONT = ("Aerial", 14)
 TABLE_HEADER_FONT = ("Aerial", 14)
