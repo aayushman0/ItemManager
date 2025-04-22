@@ -4,7 +4,12 @@ from db.models import Product, Batch
 from variables import ROW_COUNT
 
 
-def get(code: str, batch_no: str) -> Batch | None:
+def get(code: str | None = None, batch_no: str | None = None, batch_id: str | None = None) -> Batch | None:
+    if batch_id:
+        batch = session.query(Batch).filter(Batch.id == batch_id).scalar()
+        return batch
+    if not (code and batch_no):
+        return None
     product: Product | None = session.query(Product).filter(Product.code == code).scalar()
     if not product:
         return None
@@ -52,11 +57,12 @@ def create(product_id: str, batch_no: str, price: float, quantity: int, mfg_date
     return batch
 
 
-def edit(code: str, batch_no: str, price: float, quantity: int, mfg_date: date, exp_date: date, distributor: str) -> Batch | None:
-    batch = session.query(Batch).join(Product).filter(Product.code == code, Batch.batch_no == batch_no).first()
+def edit(batch_id: str, product_id: str, batch_no: str, price: float, quantity: int, mfg_date: date, exp_date: date, distributor: str) -> Batch | None:
+    batch: Batch | None = session.query(Batch).filter(Batch.id == batch_id).scalar()
     if not batch:
         return None
-
+    batch.product_id = product_id
+    batch.batch_no = batch_no
     batch.price = price
     batch.quantity = quantity
     batch.mfg_date = mfg_date
