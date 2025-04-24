@@ -1,6 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
-from tkinter.messagebox import askyesno
+from tkinter import ttk, messagebox
 from db.orm import product_bill
 from GUI import classes
 from variables import BILL_ROW_COUNT
@@ -53,14 +52,14 @@ class Frame(classes.Frame):
         bill_no = self.bill_no.get()
         if not bill_no:
             return None
-        confirmation = askyesno(title="Delete Bill", message=f"Delete Bill no. {bill_no}?")
+        confirmation = messagebox.askyesno(title="Delete Bill", message=f"Delete Bill no. {bill_no}?")
         if not confirmation:
             return None
         b = product_bill.delete(bill_no)
         if not b:
             return None
         if b.is_enabled:
-            print("Bill not deleted!!!")
+            messagebox.showwarning("Bill not Deleted", "Bill cannot be deleted!")
             return None
 
     def refresh(self) -> None:
@@ -68,7 +67,7 @@ class Frame(classes.Frame):
         bill_no = self.bill_no.get()
         bill, batches_and_qty = product_bill.get(bill_no)
         if not bill:
-            print("Bill not found!!!")
+            messagebox.showwarning("Bill not Found", "Bill cannot be found!")
             self.bill_date.set("XXXX-XX-XX")
             self.customer_name.set("")
             self.discount.set("")

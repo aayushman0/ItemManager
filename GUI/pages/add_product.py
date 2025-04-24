@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from db.orm import product
 from GUI import classes
 from variables import PRODUCT_TYPES_LIST
@@ -40,7 +41,7 @@ class Frame(classes.Frame):
         best_before = self.product_best_before.get()
         shelf = self.product_shelf_id.get()
         if not (name and type and price and min_unit and best_before and shelf):
-            print("Value missing!!!")
+            messagebox.showwarning("Missing Values", "Values are Missing!")
             return None
         try:
             _ = product.create(
@@ -53,7 +54,7 @@ class Frame(classes.Frame):
             )
             self.refresh()
         except product.ProductAlreadyExists:
-            print("Product already exist!!!")
+            messagebox.showwarning("Product Exists", "Product already exist!")
 
     def refresh(self) -> None:
         self.product_name.set("")

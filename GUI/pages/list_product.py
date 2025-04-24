@@ -75,7 +75,6 @@ class Frame(classes.Frame):
     def select_product(self, *args) -> None:
         selected_product = self.table.selection()
         if not selected_product:
-            print("No Product Selected!!!")
             return None
         prod_id = self.table.item(selected_product[0]).get("values", [None])[0]
         self.productDetail.product_id.set(prod_id)

@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import re
 from db.models import Batch
 from db.orm import product, batch, product_bill
@@ -80,7 +80,7 @@ class Frame(classes.Frame):
         batch_no = self.batch_no.get()
         quantity = int(self.quantity.get() or 0)
         if not (product_name and batch_no and quantity):
-            print("Values Missing!!!")
+            messagebox.showwarning("Missing Values", "Values are Missing!")
             return None
         exp_date = f"{self.current_batch.exp_date.month:02d} / {self.current_batch.exp_date.year}"
         price_per_unit = self.price_per_unit.get()
@@ -95,7 +95,7 @@ class Frame(classes.Frame):
 
     def add_bill(self) -> None:
         if not self.bill_list:
-            print("Bill is Empty!!!")
+            messagebox.showwarning("Empty Bill", "Bill is Empty!")
             return None
         bill_string = ",".join(self.bill_list)
         customer_name = self.customer_name.get()
@@ -157,7 +157,6 @@ class Frame(classes.Frame):
     def remove_from_bill(self, *args) -> None:
         cur_item = self.table.focus()
         if not cur_item:
-            print("No Item Selected!!!")
             return None
         i = self.table.index(cur_item)
         self.table.delete(cur_item)

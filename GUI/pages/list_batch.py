@@ -77,7 +77,6 @@ class Frame(classes.Frame):
     def select_batch(self, *args) -> None:
         selected_batch = self.table.selection()
         if not selected_batch:
-            print("No Batch Selected!!!")
             return None
         prod_name, batch_no = self.table.item(selected_batch[0]).get("values", [None])[0:2]
         code = re.sub('[^A-Za-z0-9]+', '', prod_name).lower()

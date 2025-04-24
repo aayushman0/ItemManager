@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from GUI.pages import general
+from GUI.pages import general, import_db
 from GUI.pages import add_product, list_product, product_detail
 from GUI.pages import add_batch, list_batch, batch_detail
 from GUI.pages import add_bill, list_bill, bill_detail
@@ -39,6 +39,7 @@ billDetail = bill_detail.Frame(frame)
 listBill = list_bill.Frame(frame, billDetail)
 
 generalPage = general.Frame(frame, productDetail, batchDetail, billDetail)
+importPage = import_db.Frame(frame)
 # ----------------------------------------------------------------------------------------- #
 
 
@@ -59,9 +60,14 @@ bill_menu = tk.Menu(menubar, tearoff=0)
 bill_menu.add_command(label="New Bill", command=addBill.set_active)
 bill_menu.add_command(label="List Bill", command=listBill.set_active)
 
+extra_menu = tk.Menu(menubar, tearoff=0)
+extra_menu.add_command(label="Import", command=importPage.set_active)
+
 menubar.add_cascade(label="General ", menu=general_menu)
 menubar.add_cascade(label="Item    ", menu=product_menu)
 menubar.add_cascade(label="Bill    ", menu=bill_menu)
+menubar.add_cascade(label="Extra   ", menu=extra_menu)
+
 root.config(menu=menubar)
 # ----------------------------------------------------------------------------------------- #
 

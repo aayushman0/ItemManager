@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from datetime import date, timedelta
 from db.orm import product_bill
 from GUI import classes
@@ -79,11 +79,10 @@ class Frame(classes.Frame):
     def select_bill(self, *args):
         selected_bill = self.table.selection()
         if not selected_bill:
-            print("No Bill Selected!!!")
             return None
         bill_id = self.table.item(selected_bill[0]).get("values", [None])[0]
         if bill_id is None:
-            print("Bill ID not found!!!")
+            messagebox.showwarning("ID not Found", "Bill ID not found!")
             return None
         self.billDetail.bill_no.set(bill_id)
         self.billDetail.set_active()

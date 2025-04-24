@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from datetime import date, datetime
 import re
 from db.orm import product, batch
@@ -43,11 +43,11 @@ class Frame(add_batch.Frame):
         batch_no = self.batch_no.get()
         price = self.price.get()
         if not (product_name and batch_no and price):
-            print("Values missing!!!")
+            messagebox.showwarning("Missing Values", "Values are Missing!")
             return None
         p = product.get_by_code(code=re.sub('[^A-Za-z0-9]+', '', product_name).lower())
         if not p:
-            print("Product doesn't exist!!!")
+            messagebox.showwarning("No Product", "Product doesn't exist!")
             return None
         quantity = self.quantity.get() or 0
         mfg_date = date(self.mfg_year.get(), self.mfg_month.get(), 1)
@@ -64,7 +64,7 @@ class Frame(add_batch.Frame):
             distributor=distributor
         )
         if not b:
-            print("Error!!!")
+            messagebox.showwarning("Warning", "Batch cannot be edited!")
             return None
         self.refresh()
 

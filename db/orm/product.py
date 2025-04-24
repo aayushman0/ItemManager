@@ -1,6 +1,6 @@
 import re
 from db.models import session
-from db.models import Product
+from db.models import Product, Batch
 from variables import ROW_COUNT, PRODUCT_TYPES
 
 
@@ -64,3 +64,20 @@ def edit(id: str, name: str, type: str, price: float, min_unit: int, best_before
     session.commit()
 
     return product
+
+
+def import_product(name: str, type: str, price: float, min_unit: int, best_before: int, shelf: str, b_list: list) -> None:
+    code: str = f"{PRODUCT_TYPES.get(type.lower(), 'oth')}{re.sub('[^A-Za-z0-9]+', '', name).lower()}"
+    product: Product | None = session.query(Product).filter(Product.code == code).scalar()
+    if not product:
+        product = Product(name, type, code, price, min_unit, best_before, shelf)
+        session.add(product)
+        session.commit()
+
+    for batch in b_list:
+        b = session.query(Batch).filter(Batch.product_id == product.id, Batch.batch_no == batch[0]).scalar()
+        if b:
+            continue
+        b = Batch(product.id, batch[0], batch[4], batch[3], batch[1], batch[2], batch[5])
+        session.add(b)
+    session.commit()

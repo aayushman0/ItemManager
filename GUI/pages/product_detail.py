@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from db.orm import product
 from GUI.pages import add_product
 from variables import PRODUCT_TYPES_LIST
@@ -28,7 +29,7 @@ class Frame(add_product.Frame):
         best_before = self.product_best_before.get()
         shelf = self.product_shelf_id.get()
         if not (name and type and price and min_unit and best_before and shelf):
-            print("Value missing!!!")
+            messagebox.showwarning("Missing Values", "Values are Missing!")
             return None
         p = product.edit(
             id=self.product_id.get(),
@@ -40,7 +41,7 @@ class Frame(add_product.Frame):
             shelf=shelf
         )
         if not p:
-            print("Error!!!")
+            messagebox.showwarning("WARNING", "Product not found!")
             return None
         self.refresh()
 
