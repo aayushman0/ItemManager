@@ -1,14 +1,14 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import date, timedelta
-from db.orm import product_bill
+from db.orm import service_bill
 from GUI import classes
-from GUI.pages import bill_detail
+from GUI.pages import service_bill_detail
 from variables import ENTRY_FONT
 
 
 class Frame(classes.Frame):
-    def __init__(self, master, billDetail: bill_detail.Frame) -> None:
+    def __init__(self, master, billDetail: service_bill_detail.Frame) -> None:
         super().__init__(master)
         self.columnconfigure(0, weight=1)
         self.billDetail = billDetail
@@ -53,7 +53,7 @@ class Frame(classes.Frame):
         self.table.bind("<Double-Button-1>", self.select_bill)
 
     def update_table(self) -> None:
-        bills = product_bill.get_by_date(self.current_date)
+        bills = service_bill.get_by_date(self.current_date)
         self.table.delete(*self.table.get_children())
         current_total = 0
         for bill in bills:

@@ -82,6 +82,7 @@ class Frame(classes.Frame):
         code = re.sub('[^A-Za-z0-9]+', '', prod_name).lower()
         b = batch.get(code, batch_no)
         self.batchDetail.batch_id.set(b.id)
+        self.batchDetail.previous_page = self
         self.batchDetail.set_active()
 
     def refresh(self) -> None:

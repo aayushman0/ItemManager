@@ -19,6 +19,9 @@ class Frame(ttk.Frame):
         self.table_columns_align = list()
         self.page_no = 1
         self.total_pages = 1
+        self.first_entry: tk.Entry
+        self.last_entry: tk.Entry
+        self.previous_page: Frame
 
     # ------------------------------------------------ Getter and Setter ------------------------------------------------ #
     @property
@@ -180,6 +183,14 @@ class Frame(ttk.Frame):
     def tab_sequencing(self):
         self.first_entry.bind("<Shift-Tab>", lambda x: self.last_entry.focus_set() or "break")
         self.last_entry.bind("<Tab>", lambda x: (self.first_entry.focus_set() or "break") if x.state != 9 else None)
+
+    def return_prev_page(self):
+        self.previous_page.tkraise()
+        self.previous_page.update_table()
+        self.previous_page.first_entry.focus_set()
+
+    def update_table(self):
+        pass
 
     def refresh(self) -> None:
         pass

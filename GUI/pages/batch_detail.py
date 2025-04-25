@@ -4,7 +4,7 @@ from datetime import date, datetime
 import re
 from db.orm import product, batch
 from GUI.pages import add_batch
-from variables import PRODUCT_TYPES
+from variables import PRODUCT_TYPES, ENTRY_FONT
 
 
 class Frame(add_batch.Frame):
@@ -13,6 +13,11 @@ class Frame(add_batch.Frame):
         self.batch_id = tk.StringVar()
 
     def main(self) -> None:
+        tk.Button(
+                self, text="<", width=10, height=1, font=ENTRY_FONT, bg="#dddddd", command=self.return_prev_page
+            ).grid(
+                row=self.i, column=0, padx=self.PADX, sticky="w"
+        )
         self.first_entry = self.choice_entry(self, "Name: ", self.i, 0, self.product_name, [], False)
         self.string_entry(self, "Batch No.: ", self.i, 0, self.batch_no)
         self.float_entry(self, "Price: ", self.i, 0, self.price)
@@ -66,7 +71,7 @@ class Frame(add_batch.Frame):
         if not b:
             messagebox.showwarning("Warning", "Batch cannot be edited!")
             return None
-        self.refresh()
+        self.return_prev_page()
 
     def refresh(self) -> None:
         self.first_entry["values"] = []

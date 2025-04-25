@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from db.orm import product
 from GUI.pages import add_product
-from variables import PRODUCT_TYPES_LIST
+from variables import PRODUCT_TYPES_LIST, ENTRY_FONT
 
 
 class Frame(add_product.Frame):
@@ -11,6 +11,11 @@ class Frame(add_product.Frame):
         self.product_id = tk.StringVar()
 
     def main(self) -> None:
+        tk.Button(
+                self, text="<", width=10, height=1, font=ENTRY_FONT, bg="#dddddd", command=self.return_prev_page
+            ).grid(
+                row=self.i, column=0, padx=self.PADX, sticky="w"
+        )
         self.first_entry = self.string_entry(self, "Name: ", self.i, 0, self.product_name)
         self.type_entry = self.choice_entry(self, "Type: ", self.i, 0, self.product_type, PRODUCT_TYPES_LIST)
         self.float_entry(self, "Price: ", self.i, 0, self.product_price)
@@ -43,7 +48,7 @@ class Frame(add_product.Frame):
         if not p:
             messagebox.showwarning("WARNING", "Product not found!")
             return None
-        self.refresh()
+        self.return_prev_page()
 
     def refresh(self) -> None:
         p = product.get_by_id(self.product_id.get())

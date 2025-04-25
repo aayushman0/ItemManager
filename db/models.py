@@ -87,6 +87,31 @@ class ProductBill(BaseModel):
         return f"{self.id}. {self.customer_name}"
 
 
+class ServiceBill(BaseModel):
+    __tablename__ = "service_bill"
+
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    customer_name = Column("name", String(64))
+    bill = Column("bill", String)
+    total_amount = Column("total_amount", Float)
+    discount = Column("discount", Float)
+    net_amount = Column("net_amount", Float)
+    bill_date = Column("bill_date", DateTime, index=True)
+    is_enabled = Column("is_enabled", Boolean)
+
+    def __init__(self, customer_name: str, bill: str, total_amount: float, discount: float, net_amount: float):
+        self.customer_name = customer_name
+        self.bill = bill
+        self.total_amount = total_amount
+        self.discount = discount
+        self.net_amount = net_amount
+        self.bill_date = datetime.now()
+        self.is_enabled = True
+
+    def __repr__(self):
+        return f"{self.id}. {self.customer_name}"
+
+
 engine = create_engine("sqlite:///database.db", echo=False)
 BaseModel.metadata.create_all(bind=engine)
 

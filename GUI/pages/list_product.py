@@ -78,6 +78,7 @@ class Frame(classes.Frame):
             return None
         prod_id = self.table.item(selected_product[0]).get("values", [None])[0]
         self.productDetail.product_id.set(prod_id)
+        self.productDetail.previous_page = self
         self.productDetail.set_active()
 
     def refresh(self) -> None:

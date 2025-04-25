@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from db.orm import product_bill
+from db.orm import service_bill
 from GUI import classes
 from variables import BILL_ROW_COUNT
 
@@ -9,9 +9,9 @@ class Frame(classes.Frame):
     def __init__(self, master) -> None:
         super().__init__(master)
         self.columnconfigure(0, weight=1)
-        self.table_columns = ["Name", "Batch No.", "Exp Date", "Price/Unit", "Quantity", "Total"]
-        self.table_columns_width = [300, 200, 100, 150, 100, 100]
-        self.table_columns_align = ["w", "w", "e", "e", "e", "e"]
+        self.table_columns = ["Name", "Price"]
+        self.table_columns_width = [300, 200]
+        self.table_columns_align = ["w", "n"]
         self.tk_vars()
         self.main()
         self.events()
@@ -55,7 +55,7 @@ class Frame(classes.Frame):
         confirmation = messagebox.askyesno(title="Delete Bill", message=f"Delete Bill no. {bill_no}?")
         if not confirmation:
             return None
-        b = product_bill.delete(bill_no)
+        b = service_bill.delete(bill_no)
         if not b:
             return None
         if b.is_enabled:
@@ -66,7 +66,7 @@ class Frame(classes.Frame):
     def refresh(self) -> None:
         self.table.delete(*self.table.get_children())
         bill_no = self.bill_no.get()
-        bill, batches_and_qty = product_bill.get(bill_no)
+        bill = service_bill.get(bill_no)
         if not bill:
             messagebox.showwarning("Bill not Found", "Bill cannot be found!")
             self.bill_date.set("XXXX-XX-XX")
@@ -79,15 +79,6 @@ class Frame(classes.Frame):
         self.sum_total.set(bill.total_amount)
         self.discount.set(bill.discount)
         self.net_total.set(bill.net_amount)
-        for b, qty, total in batches_and_qty:
-            self.table.insert(
-                '', tk.END,
-                values=(
-                    b.product.name,
-                    b.batch_no,
-                    b.exp_date,
-                    f"{b.price:.2f}/{b.product.min_unit:02d}",
-                    qty,
-                    total
-                )
-            )
+        bill_list = bill.bill.split(",")
+        for b in bill_list:
+            self.table.insert('', tk.END, values=b.split("::"))

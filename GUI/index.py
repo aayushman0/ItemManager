@@ -4,6 +4,7 @@ from GUI.pages import general, import_db
 from GUI.pages import add_product, list_product, product_detail
 from GUI.pages import add_batch, list_batch, batch_detail
 from GUI.pages import add_bill, list_bill, bill_detail
+from GUI.pages import add_service_bill, list_service_bill, service_bill_detail
 from variables import ENTRY_FONT, TABLE_HEADER_FONT, TABLE_DATA_FONT
 
 
@@ -38,6 +39,10 @@ addBill = add_bill.Frame(frame)
 billDetail = bill_detail.Frame(frame)
 listBill = list_bill.Frame(frame, billDetail)
 
+addServiceBill = add_service_bill.Frame(frame)
+serviceBillDetail = service_bill_detail.Frame(frame)
+listServiceBill = list_service_bill.Frame(frame, serviceBillDetail)
+
 generalPage = general.Frame(frame, productDetail, batchDetail, billDetail)
 importPage = import_db.Frame(frame)
 # ----------------------------------------------------------------------------------------- #
@@ -60,13 +65,18 @@ bill_menu = tk.Menu(menubar, tearoff=0)
 bill_menu.add_command(label="New Bill", command=addBill.set_active)
 bill_menu.add_command(label="List Bill", command=listBill.set_active)
 
+service_bill_menu = tk.Menu(menubar, tearoff=0)
+service_bill_menu.add_command(label="New Service Bill", command=addServiceBill.set_active)
+service_bill_menu.add_command(label="List Service Bill", command=listServiceBill.set_active)
+
 extra_menu = tk.Menu(menubar, tearoff=0)
 extra_menu.add_command(label="Import", command=importPage.set_active)
 
-menubar.add_cascade(label="General ", menu=general_menu)
-menubar.add_cascade(label="Item    ", menu=product_menu)
-menubar.add_cascade(label="Bill    ", menu=bill_menu)
-menubar.add_cascade(label="Extra   ", menu=extra_menu)
+menubar.add_cascade(label="   General  ", menu=general_menu)
+menubar.add_cascade(label="   Item     ", menu=product_menu)
+menubar.add_cascade(label="   Bill     ", menu=bill_menu)
+menubar.add_cascade(label="Service Bill", menu=service_bill_menu)
+menubar.add_cascade(label="   Extra    ", menu=extra_menu)
 
 root.config(menu=menubar)
 # ----------------------------------------------------------------------------------------- #
