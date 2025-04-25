@@ -42,6 +42,8 @@ class Frame(classes.Frame):
         self.float_entry(entry_frame, "Total: ", 1, 4, self.item_total).config(state="disabled")
         self.batch_no_entry = self.choice_entry(entry_frame, "Batch No.: ", 2, 0, self.batch_no, [])
         self.int_entry(entry_frame, "Quantity: ", 2, 2, self.quantity)
+        self.max_qty_label = tk.Label(entry_frame, text="", font=ENTRY_FONT)
+        self.max_qty_label.grid(row=2, column=4, sticky="w")
         tk.Button(
                 entry_frame, text="Add to Bill", width=20, height=1, font=ENTRY_FONT, bg="#ababdf", command=self.add_to_bill
             ).grid(
@@ -142,6 +144,7 @@ class Frame(classes.Frame):
             return None
         self.price = self.current_batch.price
         self.price_per_unit.set(f"{self.current_batch.price:.2f}/{self.current_batch.product.min_unit:02d}")
+        self.max_qty_label["text"] = f"/{self.current_batch.quantity}"
 
     def calculate_item_total(self, *args) -> None:
         quantity = int(self.quantity.get() or 0)
@@ -175,6 +178,7 @@ class Frame(classes.Frame):
         self.price_per_unit.set("")
         self.price = 0.0
         self.quantity.set("")
+        self.max_qty_label["text"] = ""
         self.item_total.set("")
 
     def refresh(self) -> None:
