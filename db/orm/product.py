@@ -32,7 +32,7 @@ def get_paginated(page: int, name: str, type: str, shelf: str) -> tuple[list[Pro
 
 
 def get_filtered(code: str) -> list[Product]:
-    products: list[Product] = session.query(Product).filter(Product.code.icontains(code)).order_by(Product.name)
+    products: list[Product] = session.query(Product).filter(Product.code.icontains(code)).order_by(Product.code)
     return products
 
 
