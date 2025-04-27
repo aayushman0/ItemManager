@@ -30,7 +30,7 @@ def get_paginated(page: int, name: str, shelf: str, distributor: str) -> tuple[l
         batches = batches.filter(Product.shelf.icontains(shelf))
     if distributor:
         batches = batches.filter(Batch.distributor.icontains(distributor))
-    batches = batches.order_by(Batch.exp_date)
+    batches = batches.filter(Batch.quantity > 0).order_by(Batch.exp_date)
     count: int = batches.count()
     paginated_batches: list[Batch] = batches.slice((page-1) * ROW_COUNT, page * ROW_COUNT)
     return paginated_batches, count
