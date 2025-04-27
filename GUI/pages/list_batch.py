@@ -61,7 +61,7 @@ class Frame(classes.Frame):
                 '', tk.END,
                 values=[
                     f"{PRODUCT_TYPES.get(row.product.type.lower(), 'oth').capitalize()}. {row.product.name}",
-                    row.batch_no,
+                    f"|{row.batch_no}",
                     f"{row.price:.2f}/{row.product.min_unit:02d}",
                     row.quantity,
                     f"{row.exp_date.month:02d} / {row.exp_date.year}",
@@ -80,6 +80,7 @@ class Frame(classes.Frame):
             return None
         prod_name, batch_no = self.table.item(selected_batch[0]).get("values", [None])[0:2]
         code = re.sub('[^A-Za-z0-9]+', '', prod_name).lower()
+        batch_no = batch_no[1:]
         b = batch.get(code, batch_no)
         self.batchDetail.batch_id.set(b.id)
         self.batchDetail.previous_page = self
