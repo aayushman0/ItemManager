@@ -27,13 +27,13 @@ style.configure("Treeview.Heading", font=TABLE_HEADER_FONT)
 
 
 # ----------------------------------------- Pages ----------------------------------------- #
-addProduct = add_product.Frame(frame)
-productDetail = product_detail.Frame(frame)
-listProduct = list_product.Frame(frame, productDetail)
-
 addBatch = add_batch.Frame(frame)
 batchDetail = batch_detail.Frame(frame)
 listBatch = list_batch.Frame(frame, batchDetail)
+
+addProduct = add_product.Frame(frame)
+productDetail = product_detail.Frame(frame, batchDetail)
+listProduct = list_product.Frame(frame, productDetail)
 
 addBill = add_bill.Frame(frame)
 billDetail = bill_detail.Frame(frame)

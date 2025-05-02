@@ -72,6 +72,7 @@ class Frame(classes.Frame):
         if not item_id:
             return None
         self.productDetail.product_id.set(item_id)
+        self.productDetail.previous_page = self
         self.productDetail.set_active()
 
     def change_to_batch(self, *args) -> None:
@@ -79,6 +80,7 @@ class Frame(classes.Frame):
         if not batch_id:
             return None
         self.batchDetail.batch_id.set(batch_id)
+        self.batchDetail.previous_page = self
         self.batchDetail.set_active()
 
     def change_to_bill(self, *args) -> None:
@@ -86,6 +88,7 @@ class Frame(classes.Frame):
         if not bill_no:
             return None
         self.billDetail.bill_no.set(bill_no)
+        self.billDetail.previous_page = self
         self.billDetail.set_active()
 
     def refresh(self) -> None:

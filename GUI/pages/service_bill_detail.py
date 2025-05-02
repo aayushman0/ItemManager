@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from db.orm import service_bill
 from GUI import classes
-from variables import BILL_ROW_COUNT
+from variables import BILL_ROW_COUNT, ENTRY_FONT
 
 
 class Frame(classes.Frame):
@@ -28,7 +28,12 @@ class Frame(classes.Frame):
         entry_frame = ttk.Frame(self)
         entry_frame.columnconfigure(1, weight=1)
         entry_frame.grid(row=0, sticky="ew")
-        self.string_entry(entry_frame, "Bill No.: ", 0, 0, self.bill_no).config(state="disabled")
+        tk.Button(
+                entry_frame, text="<", width=10, height=1, font=ENTRY_FONT, bg="#dddddd", command=self.return_prev_page
+            ).grid(
+                row=0, column=0, padx=self.PADX, sticky="w"
+        )
+        self.string_entry(entry_frame, "Bill No.: ", 0, 1, self.bill_no).config(state="disabled")
         self.string_entry(entry_frame, "Bill Date: ", 0, 4, self.bill_date).config(state="disabled")
         self.string_entry(entry_frame, "Customer's Name: ", 1, 0, self.customer_name, 5).config(state="disabled")
         self.string_entry(entry_frame, "Sum Total: ", 2, 0, self.sum_total).config(state="disabled")

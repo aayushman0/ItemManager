@@ -1,13 +1,31 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
-from db.orm import product
-from GUI.pages import add_product
+from db.orm import product, batch
+from GUI import classes
+from GUI.pages import batch_detail
 from variables import PRODUCT_TYPES_LIST, ENTRY_FONT
 
 
-class Frame(add_product.Frame):
-    def __init__(self, master) -> None:
+class Frame(classes.Frame):
+    def __init__(self, master, batchDetail: batch_detail.Frame) -> None:
         super().__init__(master)
+        self.columnconfigure(1, weight=1)
+        self.batchDetail = batchDetail
+        self.table_columns = ["ID", "Batch No.", "Mfg Date", "Exp Date", "Price", "Quantity", "Distributor"]
+        self.table_columns_width = [20, 200, 100, 100, 150, 100, 150]
+        self.table_columns_align = ["e", "w", "e", "e", "e", "e", "e"]
+        self.tk_vars()
+        self.main()
+        self.events()
+
+    def tk_vars(self) -> None:
+        self.product_name = tk.StringVar()
+        self.product_type = tk.StringVar()
+        self.product_price = tk.StringVar()
+        self.product_min_unit = tk.StringVar()
+        self.product_best_before = tk.StringVar()
+        self.product_shelf_id = tk.StringVar()
         self.product_id = tk.StringVar()
 
     def main(self) -> None:
@@ -23,6 +41,16 @@ class Frame(add_product.Frame):
         self.int_entry(self, "Best Before: ", self.i, 0, self.product_best_before)
         self.string_entry(self, "Shelf ID: ", self.i, 0, self.product_shelf_id)
         self.last_entry = self.create_button(self, "Edit Item", self.i, 1, 30, "#d0ffd0", self.edit_product)
+
+        table_frame = ttk.Frame(self)
+        table_frame.columnconfigure(0, weight=1)
+        table_frame.grid(row=self.i, column=0, columnspan=2, sticky="ew")
+        self.create_table(table_frame, 0, 0)
+        self.table.config(height=8)
+
+    def events(self) -> None:
+        self.tab_sequencing()
+        self.table.bind("<Double-Button-1>", self.select_batch)
 
     def edit_product(self) -> None:
         if not self.product_id.get():
@@ -50,20 +78,50 @@ class Frame(add_product.Frame):
             return None
         self.return_prev_page()
 
+    def select_batch(self, *args) -> None:
+        selected_batch = self.table.selection()
+        if not selected_batch:
+            return None
+        batch_id = self.table.item(selected_batch[0]).get("values", [None])[0]
+        b = batch.get(batch_id=batch_id)
+        self.batchDetail.batch_id.set(b.id)
+        self.batchDetail.previous_page = self
+        self.batchDetail.set_active()
+
+    def update_table(self):
+        self.table.delete(*self.table.get_children())
+        batches = batch.get_all_from_product(self.product_id.get())
+        for b in batches:
+            self.table.insert(
+                '', tk.END,
+                values=(
+                    b.id,
+                    b.batch_no,
+                    b.mfg_date,
+                    b.exp_date,
+                    b.price,
+                    b.quantity,
+                    b.distributor
+                )
+            )
+
     def refresh(self) -> None:
         p = product.get_by_id(self.product_id.get())
-        if p:
-            self.product_name.set(p.name)
-            self.type_entry.current(PRODUCT_TYPES_LIST.index(p.type))
-            self.product_price.set(p.price)
-            self.product_min_unit.set(p.min_unit)
-            self.product_best_before.set(p.best_before)
-            self.product_shelf_id.set(p.shelf)
-        else:
+        if not p:
             self.product_name.set("")
             self.type_entry.current(0)
             self.product_price.set("")
             self.product_min_unit.set("")
             self.product_best_before.set("")
             self.product_shelf_id.set("")
+            self.first_entry.focus_set()
+            self.table.delete(*self.table.get_children())
+            return None
+        self.product_name.set(p.name)
+        self.type_entry.current(PRODUCT_TYPES_LIST.index(p.type))
+        self.product_price.set(p.price)
+        self.product_min_unit.set(p.min_unit)
+        self.product_best_before.set(p.best_before)
+        self.product_shelf_id.set(p.shelf)
+        self.update_table()
         self.first_entry.focus_set()
