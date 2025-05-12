@@ -84,6 +84,7 @@ class Frame(add_batch.Frame):
             self.min_unit.set(p.min_unit)
             self.quantity.set(b.quantity)
             self.distributor.set(b.distributor)
+            self.best_before = p.best_before
             self.mfg_year.set(b.mfg_date.year)
             self.mfg_month.set(b.mfg_date.month)
             self.exp_year.set(b.exp_date.year)
@@ -95,6 +96,7 @@ class Frame(add_batch.Frame):
             self.min_unit.set("")
             self.quantity.set("")
             self.distributor.set("")
+            self.best_before = 0
             today = datetime.now()
             self.mfg_year.set(today.year)
             self.mfg_month.set(today.month)
