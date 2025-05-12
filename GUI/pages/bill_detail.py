@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from db.orm import product_bill
 from GUI import classes
-from variables import BILL_ROW_COUNT, ENTRY_FONT
+from variables import BILL_ROW_COUNT, ENTRY_FONT, PRODUCT_TYPES
 
 
 class Frame(classes.Frame):
@@ -88,7 +88,7 @@ class Frame(classes.Frame):
             self.table.insert(
                 '', tk.END,
                 values=(
-                    b.product.name,
+                    f"{PRODUCT_TYPES.get(b.product.type.lower(), 'oth').capitalize()}. {b.product.name}",
                     b.batch_no,
                     b.exp_date,
                     f"{b.price:.2f}/{b.product.min_unit:02d}",
